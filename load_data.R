@@ -115,6 +115,16 @@ ggplot(ngao_season_means, aes(season_year, seasonal_NGAO_mean)) + geom_point() +
 
 ggplot(rec, aes(Year, Rec)) + geom_point() + facet_wrap(~Region)
 
+p1 <- ggplot(rec, aes(Year, Rec, col=Region)) + geom_point() + geom_line() + theme_bw()
+
+p2 <- ggplot(esp, aes(Year, Summer_Sablefish_CPUE_Juvenile_Nearshore_GOAAI_Survey)) + geom_point() + geom_line() + theme_bw()
+p3 <- ggplot(esp, aes(Year, Summer_Sablefish_CPUE_Juvenile_GOA_Survey)) + geom_point() + geom_line() + theme_bw()
+
+
+library(cowplot)
+
+plot_grid(p2, p3, nrow=2)
+
 #match data into one data frame-------
 
 #start matching all indicators together, look at correlations, will sort into regions later
@@ -195,6 +205,7 @@ EGOA_ind <- indic_dat %>% select(c(Year, Spring_Temperature_Surface_GOA_Satellit
                                    Summer_Temperature_250m_GOA_Survey,
                                    Summer_Sablefish_Condition_Female_Adult_GOA_Survey,
                                    Annual_Sablefish_Incidental_Catch_Arrowtooth_Target_GOA_Fishery,
+                                   Summer_Sablefish_CPUE_Juvenile_Nearshore_GOAAI_Survey,
                                    summer_NGAO,
                                    summer_DW,
                                    n_samples,                                                      

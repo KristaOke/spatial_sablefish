@@ -368,6 +368,98 @@ summary( fit )
 
 
 
+#EGOA=====
+
+#EGOA CPUE version====
+
+#LARGE MESH
+names(EGOA_df)
+
+Z = ts( EGOA_df[,c(4:6,11:13,19)] ) #
+#
+family = rep('fixed', ncol(EGOA_df[,c(4:6,11:13,19)])) #EDIT THIS LINE fixed assumes no obs error
+
+#LOG???
+
+# Specify model
+sem = "
+             # Link, lag, param_name
+             SSB -> Annual_Copepod_Community_Size_EGOA_Survey, 1, SSB_to_Copepod_lag1 
+             Spring_Temperature_Surface_GOA_Satellite -> Annual_Copepod_Community_Size_EGOA_Survey, 1, SST_to_Copepod_lag1 
+             Annual_Copepod_Community_Size_EGOA_Survey -> growth_index, 1, Copepod_to_growth_lag1 
+             Spring_Temperature_Surface_GOA_Satellite -> growth_index, 1, SST_to_growth_lag1 
+             SSB -> Summer_Sablefish_CPUE_Juvenile_Nearshore_GOAAI_Survey, 1, SSB_to_largemesh_lag1 
+            summer_DW -> Summer_Sablefish_CPUE_Juvenile_Nearshore_GOAAI_Survey, 1, DW_to_largemesh_lag1
+            summer_NGAO -> Summer_Sablefish_CPUE_Juvenile_Nearshore_GOAAI_Survey, 1, NGAO_to_largemesh_lag1
+                        summer_DW -> growth_index, 1, DW_to_growth_lag1
+            summer_NGAO -> growth_index, 1, NGAO_to_growth_lag1
+
+             
+             SSB -> SSB, 1, AR1, 0.001
+             Spring_Temperature_Surface_GOA_Satellite -> Spring_Temperature_Surface_GOA_Satellite, 1, AR2, 0.001
+             summer_NGAO -> summer_NGAO, 1, AR3, 0.001
+             summer_DW -> summer_DW, 1, AR4, 0.001
+             Summer_Sablefish_CPUE_Juvenile_Nearshore_GOAAI_Survey -> Summer_Sablefish_CPUE_Juvenile_Nearshore_GOAAI_Survey, 1, AR5, 0.001
+             growth_index -> growth_index, 1, AR6, 0.001
+             Annual_Copepod_Community_Size_EGOA_Survey -> Annual_Copepod_Community_Size_EGOA_Survey, 1, AR7, 0.001
+             "
+
+# Fit
+#getting an error about NAs in i and j in sparse Matrix? Doublecheck all covariates are spelled/cased correctly in SEM
+fit = dsem( sem = sem,
+            tsdata = Z,
+            family = family,
+            control = dsem_control(use_REML=FALSE, quiet=FALSE) )
+ParHat = fit$obj$env$parList()
+summary( fit )
+
+
+
+
+#BT SURVEY
+names(EGOA_df)
+
+Z = ts( EGOA_df[,c(4:7,12:13,19)] ) #
+#
+family = rep('fixed', ncol(EGOA_df[,c(4:7,12:13,19)])) #EDIT THIS LINE fixed assumes no obs error
+
+#LOG???
+
+# Specify model
+sem = "
+             # Link, lag, param_name
+             SSB -> Annual_Copepod_Community_Size_EGOA_Survey, 1, SSB_to_Copepod_lag1 
+             Spring_Temperature_Surface_GOA_Satellite -> Annual_Copepod_Community_Size_EGOA_Survey, 1, SST_to_Copepod_lag1 
+             Annual_Copepod_Community_Size_EGOA_Survey -> growth_index, 1, Copepod_to_growth_lag1 
+             Spring_Temperature_Surface_GOA_Satellite -> growth_index, 1, SST_to_growth_lag1 
+             SSB -> Summer_Sablefish_CPUE_Juvenile_GOA_Survey, 1, SSB_to_surv_lag1 
+            summer_DW -> Summer_Sablefish_CPUE_Juvenile_GOA_Survey, 1, DW_to_surv_lag1
+            summer_NGAO -> Summer_Sablefish_CPUE_Juvenile_GOA_Survey, 1, NGAO_to_surv_lag1
+                        summer_DW -> growth_index, 1, DW_to_growth_lag1
+            summer_NGAO -> growth_index, 1, NGAO_to_growth_lag1
+
+             
+             SSB -> SSB, 1, AR1, 0.001
+             Spring_Temperature_Surface_GOA_Satellite -> Spring_Temperature_Surface_GOA_Satellite, 1, AR2, 0.001
+             summer_NGAO -> summer_NGAO, 1, AR3, 0.001
+             summer_DW -> summer_DW, 1, AR4, 0.001
+             Summer_Sablefish_CPUE_Juvenile_GOA_Survey -> Summer_Sablefish_CPUE_Juvenile_GOA_Survey, 1, AR5, 0.001
+             growth_index -> growth_index, 1, AR6, 0.001
+             Annual_Copepod_Community_Size_EGOA_Survey -> Annual_Copepod_Community_Size_EGOA_Survey, 1, AR7, 0.001
+             "
+
+# Fit
+#getting an error about NAs in i and j in sparse Matrix? Doublecheck all covariates are spelled/cased correctly in SEM
+fit = dsem( sem = sem,
+            tsdata = Z,
+            family = family,
+            control = dsem_control(use_REML=FALSE, quiet=FALSE) )
+ParHat = fit$obj$env$parList()
+summary( fit )
+
+
+
+
 
 
 
